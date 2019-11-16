@@ -1,0 +1,2 @@
+# myFood
+GraphQL + NodeJS backend
