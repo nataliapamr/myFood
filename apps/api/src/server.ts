@@ -1,35 +1,41 @@
 import { resolve } from 'path'
-import { GraphQLServer } from 'graphql-yoga';
+import { GraphQLServer } from 'graphql-yoga'
 
-const typeDefs = resolve(__dirname, 'schema.graphql');
+const typeDefs = resolve(__dirname, 'schema.graphql')
 
 const USERS = [
   { id: 1, name: 'Black Widow', email: 'natasha@avengers.com' },
-  { id: 2, name: 'Scarlet Witch', email: 'wanda@avengers.com' }
+  { id: 2, name: 'Scarlet Witch', email: 'wanda@avengers.com' },
 ]
 
 const resolvers = {
+  User: {
+    name: (parent): string => {
+      console.log(parent)
+      return 'user: ' + parent.name
+    },
+  },
   Query: {
-    users: () => USERS
+    users: (): typeof USERS => USERS,
   },
   Mutation: {
-    createUser: (parent, args, ctx, info) => {
-      console.log('args: ', args);
-      const { data } = args;
+    createUser: (parent, args): typeof USERS[0] => {
+      console.log('args: ', args)
+      const { data } = args
       const user = {
         ...data,
-        id: USERS.length + 1
-      };
-      USERS.push(user);
+        id: USERS.length + 1,
+      }
+      USERS.push(user)
 
-      return user;
-    }
-  }
-};
+      return user
+    },
+  },
+}
 
 const server = new GraphQLServer({
   resolvers,
-  typeDefs
-});
+  typeDefs,
+})
 
-export default server;
+export default server
